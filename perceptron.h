@@ -7,13 +7,13 @@
 using namespace std;
 
 
+// Node to hold data when read from file
 struct data_node
 {
-	int actual_value;
-	float data[784];
-	data_node * next;
+	int actual_value; // What number handwritten image is supposed to be
+	float data[784]; // Pixels of image (normalized to be between 0 and 1)
+	data_node * next; // Next image 
 };
-
 
 class perceptron
 {
@@ -21,21 +21,24 @@ class perceptron
 		perceptron(float learning_rate);
 		~perceptron(void);
 
+		// Functions to check data and I/O
 		int add_data(data_node * & head);
 		int print_data(void);
 
-		int train(data_node * training_data);
+		int train(void);
 	private:
 		float learning_rate;
-		data_node * head;
-		float weights_0[785];
-		float weights_1[785];
-		float weights_2[785];
-		float weights_3[785];
-		float weights_4[785];
-		float weights_5[785];
-		float weights_6[785];
-		float weights_7[785];
-		float weights_8[785];
-		float weights_9[785];
+		data_node * head; // Pointer to LLL of data read from file
+
+		// Weights for each individual perceptron, from 0 to 9
+		float weights0[785];
+		float weights1[785];
+		float weights2[785];
+		float weights3[785];
+		float weights4[785];
+		float weights5[785];
+		float weights6[785];
+		float weights7[785];
+		float weights8[785];
+		float weights9[785];
 };
