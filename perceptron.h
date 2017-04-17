@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 // Node to hold data when read from file
 struct data_node
 {
