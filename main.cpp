@@ -1,3 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+// Matt Yee
+// CS 545
+// Machine Learning
+// 18 April 2017
+// Homework 1
+///////////////////////////////////////////////////////////////////////////////
+// main.cpp
+// Contains program main function
+/////////////////////////////////////////////////////////////////////////////// 
+
 #include "perceptron.h"
 
 int main(void)
@@ -7,12 +18,12 @@ int main(void)
 	data_node * the_head = NULL;
 	ifstream fin;
 	fin.open("mnist_train.csv");
-	float results[785] = {}; // Temporary storage for each pixel in a data point
+	float results[785] = {}; // Temporary storage for each pixel of a data point
 	char buf[3140]; // Buffer holds one line from input file
 	int data_count = 0; // Count of total number of data points in file
 
 	///////////////////////////////////////////////////////////////////////
-	// Getting each data point (one line in the file = one data point)
+	// Getting each data point (one line in the file = one data point/image)
 	while (fin.getline(buf, 3140))	
 	{
 		++data_count; // Counting total number of data points in file
@@ -30,11 +41,11 @@ int main(void)
 			token = strtok(NULL, ","); // use NULL w/strtok here?
 			results[i] = (float) atoi(token) / 255;
 		}
-		// Results array finished now
+		// Results array finished. All data read in.
 		// Contains all pixels for one data point (one handwritten image)
 
 		////////////////////////////////////////////////////////////////
-		// Now add to LLL this entire data point:
+		// Add to LLL this entire data point:
 		if (!the_head)
 		{
 
@@ -92,17 +103,14 @@ int main(void)
 		++k;
 	}
 	*/
-	// Data is printing fine
 
 	///////////////////////////////////////////////////////////////////////
 	// Read in test data into LLL held by 'test_head' pointer
 	data_node * test_head = NULL;
 	ifstream test_file;
 	test_file.open("mnist_test.csv");
-
 	float test_results[785] = {};
 	char test_buf[3140];
-
 	int test_data_count = 0; // Total number of data points (images) in file
 
 	///////////////////////////////////////////////////////////////////////
@@ -126,11 +134,11 @@ int main(void)
 			token = strtok(NULL, ","); // use NULL w/strtok here?
 			test_results[i] = (float) atoi(token) / 255;
 		}
-		// Results array finished now
+		// Results array now finished. All data read in.
 		// Contains all pixels for one data point (one handwritten image)
 
 		///////////////////////////////////////////////////////////////	
-		// Now add to LLL this entire data point:
+		// Add to LLL this entire data point:
 		if (!test_head)
 		{
 
@@ -245,10 +253,17 @@ int main(void)
 
 	///////////////////////////////////////////////////////////////////////
 	// Print to screen confusion matrix of results
+	// Print results of test data for all learning rates (0.1, 0.01, 0.001)
 	// Horizontal axis is predicted result, 0 through 9, left to right
 	// Vertical axis is actual result, 0 through 9, top to bottom
 	// Top-left to bottom-right diagonal should be most populated,
 	// indicating most images were categorized correctly.
-	test1.print_confusion_matrix();
+	cout << "test01 ";
+	test01.print_confusion_matrix();
+	cout << "test001 ";
+	test001.print_confusion_matrix();
+	cout << "test0001 ";
+	test0001.print_confusion_matrix();
+
 }
 

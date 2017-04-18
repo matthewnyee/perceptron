@@ -1,5 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////
+// Matt Yee
+// CS 545
+// Machine Learning
+// 18 April 2017
+// Homework 1
+///////////////////////////////////////////////////////////////////////////////
+// perceptron.cpp
+// Function definitions for perceptron class
+///////////////////////////////////////////////////////////////////////////////
+
 #include "perceptron.h"
 
+// Class constructor for perceptron class
+// Initializes learning rate, number of images in data file, randomly assigns
+// weights for all ten individual perceptrons (perceptron 0 through perceptron 9)
 perceptron::perceptron(float the_learning_rate, int image_count)
 {
 	learning_rate = the_learning_rate;
@@ -8,26 +22,27 @@ perceptron::perceptron(float the_learning_rate, int image_count)
  	srand(time(NULL));
 	for (int i = 0; i < 785; ++i)
 	{
-		// Assign random weights to all individual perceptrons (0-9)
-		// Get random number between 0 and 101, then divide by 100
-		// Subtract by 0.5 to get weights between -0.5 and 0.5 
-		float n = ((float) (rand() % 101)) / 100;
-		weights0[i] = (-0.5 + n);
-		weights1[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights2[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights3[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights4[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights5[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights6[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights7[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights8[i] = (-0.5 + ((float) (rand() % 101) / 100));
-		weights9[i] = (-0.5 + ((float) (rand() % 101) / 100));
+		// Assign random weights to all ten individual perceptrons (0-9)
+		// Get random number between 0 and 101, then divide by 1000
+		// Subtract by 0.05 to get weights between -0.05 and 0.05 
+		float n = ((float) (rand() % 101)) / 1000;
+		weights0[i] = (-0.05 + n);
+		weights1[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights2[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights3[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights4[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights5[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights6[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights7[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights8[i] = (-0.05 + ((float) (rand() % 101) / 1000));
+		weights9[i] = (-0.05 + ((float) (rand() % 101) / 1000));
 	}
 
-//////////////////////////////////////////////////
-// Printing random weights
-////////////////////////////////////////////////////
-/*	for (int i = 0; i < 785; ++i)
+	///////////////////////////////////////////////////////////////////////
+	// Printing random weights
+	///////////////////////////////////////////////////////////////////////
+	/*
+	for (int i = 0; i < 785; ++i)
 	{
 		cout << "weights0:" << i << "   " << weights0[i] << " ";
 		cout << "weights1:" << i << "   " << weights1[i] << endl;
@@ -40,17 +55,19 @@ perceptron::perceptron(float the_learning_rate, int image_count)
 		cout << "weights8:" << i << "   " << weights8[i] << endl;
 		cout << "weights9:" << i << "   " << weights9[i] << endl;
 	}
-*//////////////////////////////////////////////////
+	*//////////////////////////////////////////////////////////////////////
 }
 
 
 
+// Perceptron class destructor
 perceptron::~perceptron(void)
 {
 }
 
 
 
+// Function assigns to class variable 'head' head of LLL of input data
 int perceptron::add_data(data_node * & data_head)
 {
 	head = data_head;
@@ -59,14 +76,12 @@ int perceptron::add_data(data_node * & data_head)
 
 
 
+// Function prints all data values of input starting from head of LLL
 int perceptron::print_data(void)
 {
 	data_node * current = head;
-
-	int k = 0;
-	while (current && k < 4)
+	while (current)
 	{
-		cout << "k is " << k;
 		cout << endl << current->actual_value << " ";
 		for (int j = 0; j < 784; ++j)
 		{
@@ -74,13 +89,13 @@ int perceptron::print_data(void)
 		}
 		cout << endl;
 		current = current->next;
-		++k;
 	}
 	return 1;
 }
 
 
 
+// Function prints out weights for all ten individual perceptrons (0-9)
 int perceptron::print_weights(void){
 	for (int i = 0; i < 785; ++i)
 	{
@@ -95,11 +110,21 @@ int perceptron::print_weights(void){
 		cout << "weights8:" << i << "   " << weights8[i] << endl;
 		cout << "weights9:" << i << "   " << weights9[i] << endl;
 	}
+	return 1;
 }
 
 
 
-int perceptron::train(data_node * node)// trains one single data point (one image)
+// Trains entire perceptron set (perceptrons 0-9) on a single data point/image
+// Step 1: Dot product each individual perceptron to its corresponding weights
+// Step 2: If each dot product > 0, then its perceptron 'fires' (output = 1)
+// Step 3: Update all weights using formula:
+//	   weight += learning rate * (intended output - actual output) * pixel
+//	   learning rate: Defined as class private variable, set in constructor
+//	   actual output: Did this perceptron fire?
+//	   intended output: Was this perceptron supposed to fire?
+//	   pixel: A single pixel of this data point/image corresponding to this weight
+int perceptron::train(data_node * node)
 {
 	// Dot products of weights of each perceptron (0-9) and data (plus bias)
 	float sums[10] = {0};
@@ -174,24 +199,15 @@ int perceptron::train(data_node * node)// trains one single data point (one imag
 			if (node->actual_value != j) // If this perceptron is not supposed to fire 
 			{
 				changes[j][i] = learning_rate * (0 - outputs[j]) * node->data[i];	
-				if (changes[j][i] != 0)
-				{
-				//	cout << "learning_rate: " << learning_rate << " outputs[" << j << "]: " << outputs[i] << "node->data[" << i << "]: " << node->data[i] <<  "changes[" << j << "][" << i << "] is " << changes[j][i] << endl;
-				}
 			}
 			else 
 			{
 				changes[j][i] = learning_rate * (1 - outputs[j]) * node->data[i];
-				if (changes[j][i] != 0) 
-				{
-				//	cout << "learning_rate: " << learning_rate << " outputs[" << j << "]: " << outputs[i] << "node->data[" << i << "]: " << node->data[i] << "changes[" << j << "][" << i << "] is " << changes[j][i] << endl;
-				}
 			}
 		}
 	}
 
-
-	
+	// Update all weights with its change for each individual perceptron (0-9)
 	for (int i = 0; i < 785; ++i) weights0[i] += changes[0][i];
 	for (int i = 0; i < 785; ++i) weights1[i] += changes[1][i];
 	for (int i = 0; i < 785; ++i) weights2[i] += changes[2][i];
@@ -202,32 +218,23 @@ int perceptron::train(data_node * node)// trains one single data point (one imag
 	for (int i = 0; i < 785; ++i) weights7[i] += changes[7][i];
 	for (int i = 0; i < 785; ++i) weights8[i] += changes[8][i];
 	for (int i = 0; i < 785; ++i) weights9[i] += changes[9][i];
-
-	// delta change = learning_rate * (0/1 - 0/1) * data[]
-
-	// max(a, max(b, max(c, (max, d(max, e(max, f...
-	
-	// weight DOT data (data = pixels + bias of 1))	
-	// for each perceptron (0 thru 9)
-	// get highest of these DOT products
-	// if > 0, then that is the resulting "number" found by our perceptron(s)
-	// find error and change weights accordingly
+	return 1;
 }
 
 
 
+// Returns accuracy for one perceptron set (0-9) across entire dataset
 float perceptron::accuracy(void)
 {
 	float results[data_count]; // accuracy for each data point
 	data_node * curr = head;
-
 	int i = 0;
-	// iterate through all data points
+
+	// Iterate through all data points (all images)
 	while (curr)
 	{
 		// Fetch accuracy for each data point (binary 1 or 0)
 		results[i] = get_accuracy(curr);
-		//cout << "accuracy was " << results[i] << endl;
 		++i;
 		curr = curr->next;
 	}
@@ -239,6 +246,9 @@ float perceptron::accuracy(void)
 	return (float) sum / (float) data_count;
 }
 
+
+
+// Returns accuracy for one data point in data set across all perceptrons (0-9)
 int perceptron::get_accuracy(data_node * node)
 {
 	float sums[10] = {0};
@@ -277,7 +287,6 @@ int perceptron::get_accuracy(data_node * node)
 		sums[9] += node->data[i] * weights9[w];
 	}
 
-	// This loop maybe not necessary for get_accuracy?
 	// Does each perceptron (0-9) fire? (Is its weight-data dot product >= 0?)
 	// 1 if yes, 0 if no.
 	for (int i = 0; i < 10; ++i)
@@ -286,8 +295,7 @@ int perceptron::get_accuracy(data_node * node)
 		else outputs[i] = 0;
 	}
 
-
-	// Find largest dot proudct, set as max
+	// Find largest dot product, set as max
 	// (to start, max = 0);
 	for (int i = 1; i < 10; ++i)
 	{
@@ -302,6 +310,10 @@ int perceptron::get_accuracy(data_node * node)
 	else return 0;
 }
 
+
+
+// Assign all weights to match those of percetron set passed into function
+// Used to copy weights from training perceptrons to test perceptrons
 int perceptron::change_weights(perceptron copy_from)
 {
 	for (int i = 0; i < 785; ++i)
@@ -320,29 +332,43 @@ int perceptron::change_weights(perceptron copy_from)
 	return 1;
 }
 
+
+
+// Builds and prints confusion matrix for entire data set
 int perceptron::print_confusion_matrix(void)
 {
 	int matrix[10][10] = {0};
 	data_node * curr = head;
-	int actual, predict;
+	int actual, predict; // actual result/predicted serve as matrix indicies
 	while (curr)
 	{
+		// Retrieve by reference actual/predicted values
 		get_values(curr, actual, predict);
-		matrix[actual][predict] += 1;
+		matrix[actual][predict] += 1; // Up count for that index of matrix
 		curr = curr->next;
 	}
-	
+
+	// Print out confusion matrix
+	cout << "confusion matrix: " << endl;
 	for (int x = 0; x < 10; ++x)
 	{
 		for (int y = 0; y < 10; ++y)
 		{
-			cout << "  " << matrix[x][y];
+			if (matrix[x][y] < 10) cout << "     " << matrix[x][y];
+			if (matrix[x][y] < 100) cout << "    " << matrix[x][y];
+			if (matrix[x][y] < 1000) cout << "   " << matrix[x][y];
+			if (matrix[x][y] < 10000) cout << "  " << matrix[x][y];
+			if (matrix[x][y] < 100000) cout << " " << matrix[x][y];
 		}
 		cout << endl;
 	}
 	return 1;
 }
 
+
+
+// Gets actual and predicted values for a single data point using perceptron set (0-9)
+// Actual/predicted values retrived by reference
 int perceptron::get_values(data_node * node, int &actual, int &predict)
 {
 	float sums[10] = {0};
@@ -389,14 +415,15 @@ int perceptron::get_values(data_node * node, int &actual, int &predict)
 		else outputs[i] = 0;
 	}
 
-
-	// Find largest dot proudct, set as max
+	// Find largest dot product, set as max (max = what perceptron set predicts)
 	// (to start, max = 0);
 	for (int i = 1; i < 10; ++i)
 	{
 		if (sums[i] > sums[max]) max = i;
 	}
 
+	// Assigning actual/predict to variables passed by reference
 	actual = node->actual_value;
-	predict = max;	
+	predict = max;
+	return 1;
 }
