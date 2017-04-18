@@ -75,36 +75,6 @@ int main(void)
 	}
 
 	///////////////////////////////////////////////////////////////////////
-	// Prints all data points using results array
-	/*
-	for (int j = 0; j < 785; ++j)
-	{
-		cout << "results[" << j << "] = " << results[j] << endl;
-	}
-	*/
-
-	///////////////////////////////////////////////////////////////////////
-	// Prints all data points from LLL
-	/*
-	data_node * current;
-	current = the_head;
-
-	int k = 0;
-	while (current && k < 4)
-	{
-		cout << "k is " << k;
-		cout << endl << current->actual_value << " ";
-		for (int j = 0; j < 784; ++j)
-		{
-			cout << endl << j << ": " << current->data[j] << " ";
-		}
-		cout << endl;
-		current = current->next;
-		++k;
-	}
-	*/
-
-	///////////////////////////////////////////////////////////////////////
 	// Read in test data into LLL held by 'test_head' pointer
 	data_node * test_head = NULL;
 	ifstream test_file;

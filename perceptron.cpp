@@ -37,25 +37,6 @@ perceptron::perceptron(float the_learning_rate, int image_count)
 		weights8[i] = (-0.05 + ((float) (rand() % 101) / 1000));
 		weights9[i] = (-0.05 + ((float) (rand() % 101) / 1000));
 	}
-
-	///////////////////////////////////////////////////////////////////////
-	// Printing random weights
-	///////////////////////////////////////////////////////////////////////
-	/*
-	for (int i = 0; i < 785; ++i)
-	{
-		cout << "weights0:" << i << "   " << weights0[i] << " ";
-		cout << "weights1:" << i << "   " << weights1[i] << endl;
-		cout << "weights2:" << i << "   " << weights2[i] << endl;
-		cout << "weights3:" << i << "   " << weights3[i] << endl;
-		cout << "weights4:" << i << "   " << weights4[i] << endl;
-		cout << "weights5:" << i << "   " << weights5[i] << endl;
-		cout << "weights6:" << i << "   " << weights6[i] << endl;
-		cout << "weights7:" << i << "   " << weights7[i] << endl;
-		cout << "weights8:" << i << "   " << weights8[i] << endl;
-		cout << "weights9:" << i << "   " << weights9[i] << endl;
-	}
-	*//////////////////////////////////////////////////////////////////////
 }
 
 
@@ -355,10 +336,10 @@ int perceptron::print_confusion_matrix(void)
 		for (int y = 0; y < 10; ++y)
 		{
 			if (matrix[x][y] < 10) cout << "     " << matrix[x][y];
-			if (matrix[x][y] < 100) cout << "    " << matrix[x][y];
-			if (matrix[x][y] < 1000) cout << "   " << matrix[x][y];
-			if (matrix[x][y] < 10000) cout << "  " << matrix[x][y];
-			if (matrix[x][y] < 100000) cout << " " << matrix[x][y];
+			else if (matrix[x][y] < 100) cout << "    " << matrix[x][y];
+			else if (matrix[x][y] < 1000) cout << "   " << matrix[x][y];
+			else if (matrix[x][y] < 10000) cout << "  " << matrix[x][y];
+			else if (matrix[x][y] < 100000) cout << " " << matrix[x][y];
 		}
 		cout << endl;
 	}
